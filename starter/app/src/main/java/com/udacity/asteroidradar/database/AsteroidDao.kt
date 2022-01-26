@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AsteroidDao {
-    @Query("select * from asteroid_table ORDER BY closeApproachDate DESC")
-    fun getAsteroids(): Flow<List<DatabaseAsteroid>>
+    @Query("select * from asteroid_table WHERE closeApproachDate >= :filterDate ORDER BY closeApproachDate DESC")
+    fun getAsteroids(filterDate: String): Flow<List<DatabaseAsteroid>>
 
     @Query("select * from asteroid_table WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate ORDER BY closeApproachDate DESC ")
     fun getAsteroidByDateRange(

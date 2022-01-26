@@ -31,8 +31,8 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
      * using WorkManager or manually on each start of the application. Stale entries
      * will also be periodically deleted from the database.
      */
-    fun getAllAsteroids(): Flow<List<DatabaseAsteroid>> =
-        database.asteroidDao.getAsteroids().flowOn(Dispatchers.IO)
+    fun getAllAsteroids(filterDate: String): Flow<List<DatabaseAsteroid>> =
+        database.asteroidDao.getAsteroids(filterDate).flowOn(Dispatchers.IO)
 
     /**
      * Not currently needed function since our only filter is by week/day and the

@@ -49,7 +49,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
             launch {
                 _loading.emit(true)
-                repository.getAllAsteroids().collectLatest {
+                repository.getAllAsteroids(Date().todayFormatted()).collectLatest {
                     _asteroids.emit(it.asDomainModel())
                     _loading.emit(false)
                 }
@@ -90,7 +90,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun showSavedClicked() {
         viewModelScope.launch {
             _loading.emit(true)
-            database.asteroidDao.getAsteroids().collect {
+            database.asteroidDao.getAsteroids(Date().todayFormatted()).collect {
                 _asteroids.emit(it.asDomainModel())
                 _loading.emit(false)
             }
