@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.*
 import com.udacity.asteroidradar.database.AsteroidDatabase.Companion.getDatabase
+import com.udacity.asteroidradar.database.asDatabaseModel
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.flow.*
@@ -29,6 +30,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _asteroids = MutableStateFlow<List<Asteroid>?>(emptyList())
     val asteroids = _asteroids.asStateFlow()
+
+    private val _detailAsteroid = MutableSharedFlow<Asteroid?>()
+    val detailAsteroid = _detailAsteroid.asSharedFlow()
 
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
@@ -66,7 +70,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun showWeekClicked() {
         viewModelScope.launch {
             _loading.emit(true)
-            database.asteroidDao.getAsteroidByDateRange(
+            repository.getAsteroidByDateRange(
                 Date().todayFormatted(),
                 Date().futureDateFormatted(Constants.WEEK_END_DATE_DAYS)
             ).collect {
@@ -80,7 +84,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun showDayClicked() {
         viewModelScope.launch {
             _loading.emit(true)
-            database.asteroidDao.getAsteroidByDay(Date().todayFormatted()).collect {
+            repository.getAsteroidByDate(Date().todayFormatted()).collect {
                 _asteroids.emit(it.asDomainModel())
                 _loading.emit(false)
             }
@@ -90,10 +94,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun showSavedClicked() {
         viewModelScope.launch {
             _loading.emit(true)
-            database.asteroidDao.getAsteroids(Date().todayFormatted()).collect {
+            repository.getSavedAsteroids().collect {
                 _asteroids.emit(it.asDomainModel())
                 _loading.emit(false)
             }
+        }
+    }
+
+    fun updateAsteroid(asteroid: Asteroid) {
+        viewModelScope.launch {
+            asteroid.isSaved = !asteroid.isSaved
+            _detailAsteroid.emit(asteroid)
+            repository.updateAsteroid(asteroid.asDatabaseModel())
         }
     }
 

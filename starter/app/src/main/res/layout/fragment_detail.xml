@@ -8,6 +8,10 @@
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.Asteroid" />
+
+        <variable
+            name="viewModel"
+            type="com.udacity.asteroidradar.main.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +32,7 @@
             tools:srcCompat="@drawable/asteroid_safe" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_padding_medium"
@@ -150,6 +155,18 @@
 
             </LinearLayout>
         </ScrollView>
+
+        <!-- Content description set in binding adapter -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_padding_medium"
+            android:accessibilityLiveRegion="polite"
+            android:onClick="@{() -> viewModel.updateAsteroid(asteroid)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:updateStatus="@{asteroid}"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

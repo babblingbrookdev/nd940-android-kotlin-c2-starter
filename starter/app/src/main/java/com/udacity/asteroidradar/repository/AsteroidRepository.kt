@@ -69,6 +69,24 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
     }
 
     /**
+     * Retrieve list of saved asteroids in database
+     */
+    fun getSavedAsteroids(): Flow<List<DatabaseAsteroid>> = database.asteroidDao.getSavedAsteroids()
+
+    /**
+     * Update asteroid as saved to the database
+     */
+    suspend fun updateAsteroid(asteroid: DatabaseAsteroid) {
+        withContext(Dispatchers.IO) {
+            try {
+                database.asteroidDao.updateAsteroid(asteroid)
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    /**
      * Used by work manager only to remove old asteroids.
      */
     suspend fun deleteOldAsteroids() {

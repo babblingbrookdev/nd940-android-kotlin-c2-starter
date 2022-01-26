@@ -4,6 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.main.AsteroidAdapter
 import timber.log.Timber
@@ -93,4 +94,18 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
     val adapter = recyclerView.adapter as AsteroidAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("updateStatus")
+fun bindSaveButton(button: FloatingActionButton, asteroid: Asteroid?) {
+    val context = button.context
+    asteroid?.let {
+        if (it.isSaved) {
+            button.contentDescription = context.getString(R.string.unsave_asteroid)
+            button.setImageResource(R.drawable.ic_baseline_delete_24)
+        } else {
+            button.contentDescription = context.getString(R.string.save_asteroid)
+            button.setImageResource(R.drawable.ic_baseline_save_24)
+        }
+    }
 }
